@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Useritem = ({ user: { login, avatar_url, html_url } }) => {
-  // const {login,avatar_url,html_url}=props.user   before destructing
+  console.log(props);
   return (
     <div className="card text-center">
       <img
