@@ -7,12 +7,14 @@ import axios from "axios";
 import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
 import About from "./components/pages/About";
+import User from "./components/users/User";
 
 class App extends Component {
   state = {
     users: [],
     loading: false,
     alert: null,
+    user:{}
   };
 
   // async componentDidMount() {
@@ -40,6 +42,20 @@ class App extends Component {
     });
   };
 
+  //get a single github user
+  getUser=async (username)=>{
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users/${username}?&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+
+    this.setState({
+      user: res.data,
+      loading: false,
+    });
+  }
+
+
   clearUsers = () => {
     this.setState({ users: [], loading: false });
   };
@@ -53,7 +69,7 @@ class App extends Component {
   };
 
   render() {
-    const { users, loading } = this.state;
+    const { users,user, loading } = this.state;
     const icon = "fab fa-github-square";
     const title = "Github Finder";
     return (
@@ -79,6 +95,10 @@ class App extends Component {
                 )}
               />
               <Route exact path="/about" render={About}/>
+              <Route exact path="/user/:login" render={(props)=>(
+                <User {...props} getuser={this.getUser} user={user} loading={loading}/>
+              )}/>
+              
             </Switch>
           </div>
         </div>
